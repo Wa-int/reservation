@@ -1,4 +1,4 @@
-export interface Customer {
+export interface ReservationForm {
     firstName: string;
     lastName: string;
     phone: string;
@@ -8,7 +8,14 @@ export interface Customer {
     total: number;
 }
 
-export interface CustomerList {
+export interface ReservationList {
     name: string,
     total: number,
+    table: number,
+    reservationListDetails: ReservationForm[]
+}
+
+export interface ReservationFormResponse {
+    reservationList: ReservationList[],
+    allTable: number,
 }

@@ -6,6 +6,7 @@ import * as serviceWorker from './serviceWorker';
 import { BrowserRouter } from 'react-router-dom'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "react-datepicker/dist/react-datepicker.css";
+import 'antd/dist/antd.css'; 
 
 const AppWithRouter = () => (
   <BrowserRouter basename="/home">

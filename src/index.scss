@@ -7,21 +7,16 @@
 body {
   margin: 0;
   padding: 0;
-  background-color: rgb(235, 235, 235);
+
 }
 
 .App {
 	display: flex;
 	justify-content: center;
   align-items: center;
-  background-color: rgb(235, 235, 235);
+
   height: fit-content;
   margin: 40px; 
-}
-
-.app-content {
-  background-color: rgb(235, 235, 235);
-  height: 100vh;
 }
 
 .image-upload>input {

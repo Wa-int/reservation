@@ -8,24 +8,22 @@ import ReportScreen from './screens/ReportScreen/report';
 function App() {
   return (
     <>
-      <div className="app-content">
-        <Navbar bg="dark" variant="dark">
-          <Navbar.Brand href="/">Restaurant</Navbar.Brand>
-          <Nav className="mr-auto">
-            <Nav.Link href="/reservations">Reservations</Nav.Link>
-            <Nav.Link href="/report">Report</Nav.Link>
-          </Nav>
-        </Navbar>
-        
-        <div className="App">
-            <Switch>
-              <Route exact path='/reservations' component={ReservationsScreen} />
-              <Route exact path='/report' component={ReportScreen} />
-              <Route render={function () {
-                return <p>Not found</p>
-              }} />
-            </Switch>
-        </div>
+      <Navbar bg="dark" variant="dark">
+        <Navbar.Brand>Restaurant</Navbar.Brand>
+        <Nav className="mr-auto">
+          <Nav.Link href="/reservations">Reservations</Nav.Link>
+          <Nav.Link href="/report">Report</Nav.Link>
+        </Nav>
+      </Navbar>
+
+      <div className="App">
+        <Switch>
+          <Route exact path='/reservations' component={ReservationsScreen} />
+          <Route exact path='/report' component={ReportScreen} />
+          <Route render={function () {
+            return <p>Not found</p>
+          }} />
+        </Switch>
       </div>
     </>
   );

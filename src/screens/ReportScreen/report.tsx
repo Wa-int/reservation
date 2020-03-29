@@ -1,12 +1,15 @@
 import React from 'react';
 import { Table } from 'react-bootstrap';
-import { Customer, CustomerList } from '../../models/Customer';
-import DatePicker from "react-datepicker";
+import { DatePicker } from 'antd';
+import { ReservationList } from '../../models/Customer';
 import './report.scss';
+import { ReservationService } from '../../services/apis/Reservations';
+import moment, { Moment } from 'moment';
 
 interface State {
-    customerList: CustomerList[],
-    date: Date | null,
+    reservationList: ReservationList[],
+    summary: number,
+    selectedDate: Moment,
 }
 
 
@@ -15,98 +18,97 @@ class ReportScreen extends React.Component<any, State>  {
     constructor(props: any) {
         super(props);
         this.state = {
-            customerList: [],
-            date: null
+            reservationList: [],
+            selectedDate: moment(),
+            summary: 0,
         };
 
     }
 
     componentDidMount() {
+        this.getReservationList(this.state.selectedDate);
     }
 
-    getReservationList(date: Date) {
-
-        let orderList = JSON.parse(localStorage.getItem("orders") || "[]") as Customer[];
-
-        if (Array.isArray(orderList) && orderList.length === 0) {
-            return;
-        }
-
-        let result = orderList
-            .filter((e) => e.arrivalDate === date.toLocaleDateString())
-            // Group by First name + Last name.
-            // In case a customer reserves more than 1.
-            .reduce((r, a) => {
-                const key = `${a.firstName} ${a.lastName}`
-                r[key] = r[key] || [];
-                r[key].push(a);
-                return r;
-            }, Object.create(null));
-
-        let allTables = 0;
-        const unit = 4;
-
-        const customerList: CustomerList[] = [];
-        for (let [key, value] of Object.entries(result)) {
-            const totalByName = (value as Customer[]).reduce((n, e) => n + e.total, 0)
-
-            let table = 0;
-
-            table = Math.floor(totalByName / unit)
-            table = totalByName % unit > 0 ? table + 1 : table;
-
-            allTables = allTables + table;
-            customerList.push({ name: key.toUpperCase(), total: totalByName } as CustomerList)
-        }
-
-        this.setState({ customerList });
-
+    getReservationList(selectedDate: Moment) {
+        ReservationService.getReservationsByDate(selectedDate.format('YYYY-MM-DD'))
+            .then((data) => {
+                this.setState({ reservationList: data.reservationList, summary: data.allTable });
+            })
+            .catch((e) => console.log(e));
     }
 
     renderTable() {
-        const { customerList } = this.state;
+        const { reservationList, summary } = this.state;
+        let count = 0;
         return (
-            <Table responsive>
-                <thead>
-                    <tr>
-                        <th>No.</th>
-                        <th>Name</th>
-                        <th>Total</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {customerList.map((e, i) => {
-                        const key = `${i}-${e.name}`;
-                        return (
-                            <tr key={key}>
-                                <td>{i + 1}</td>
-                                <td>{e.name}</td>
-                                <td>{e.total}</td>
-                            </tr>
-                        )
-                    })}
-                </tbody>
-            </Table>
+            <div className='table-style'>
+                <Table responsive='sm'>
+                    <thead>
+                        <tr>
+                            <th>No.</th>
+                            <th>Name</th>
+                            <th>Arrival Time</th>
+                            <th>Departure Time</th>
+                            <th>Tel</th>
+                            <th>Total/Reservation</th>
+                            <th>Total</th>
+                            <th>Table</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {reservationList.map((customer, i) => {
+                            const lengthSpan = customer.reservationListDetails.length;
+                            return (
+                                <>
+                                    {customer.reservationListDetails.map((details, j) => {
+                                        const key = `${i}${j}-${customer.name}-${details.arrivalTime}`
+                                        count = count + 1;
+                                        return (
+                                            <tr key={key}>
+                                                <td>{count}</td>
+                                                {j === 0 && <td rowSpan={lengthSpan}>{customer.name}</td>}
+                                                <td>{details.arrivalTime}</td>
+                                                <td>{details.departureTime}</td>
+                                                <td>{details.phone}</td>
+                                                <td>{details.total}</td>
+                                                {j === 0 && <td rowSpan={lengthSpan}>{customer.total}</td>}
+                                                {j === 0 && <td rowSpan={lengthSpan}>{customer.table}</td>}
+                                            </tr>
+                                        )
+                                    })}
+                                </>
+                            )
+                        })}
+                    </tbody>
+                </Table>
+                <div className='summary-style '>
+                    {`Summary: ${summary} Table(s)`}
+                </div>
+            </div>
         )
     }
 
-    handleOnChangeArrivalDate(date: Date | null) {
-        if (date) {
-            this.setState({ date: date });
-            this.getReservationList(date);
+    handleOnChangeArrivalDate(selectedDate: Moment | null) {
+        if (selectedDate) {
+            this.setState({ selectedDate, reservationList: [] });
+            this.getReservationList(selectedDate);
         }
     }
 
     render() {
-        const { customerList, date } = this.state;
+        const { reservationList, selectedDate } = this.state;
         return (
-
-            <div className="container">
-                <DatePicker
-                    selected={date}
-                    onChange={(date) => this.handleOnChangeArrivalDate(date)}
-                />
-                {date ? (customerList.length > 0 ? this.renderTable() : <h5>No reservations</h5>) : <h5>Select Date</h5>}
+            <div>
+                <div>
+                    <DatePicker
+                        defaultValue={selectedDate}
+                        onChange={(date) => this.handleOnChangeArrivalDate(date)}
+                        allowClear={false}
+                    />
+                </div>
+                <div className="body-container">
+                    {selectedDate ? (reservationList.length > 0 ? this.renderTable() : <h5>No reservations</h5>) : <h5>Select Date</h5>}
+                </div>
             </div>
         )
     }
