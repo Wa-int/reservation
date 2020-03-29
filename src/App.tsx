@@ -1,26 +1,33 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { Nav, Navbar } from 'react-bootstrap';
+import { Route, Switch } from "react-router-dom";
+import './App.scss';
+import ReservationsScreen from './screens/ReservationsScreen/reservations';
+import ReportScreen from './screens/ReportScreen/report';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Navbar bg="dark" variant="dark">
+        <Navbar.Brand>Restaurant</Navbar.Brand>
+        <Nav className="mr-auto">
+          <Nav.Link href="/reservations">Reservations</Nav.Link>
+          <Nav.Link href="/report">Report</Nav.Link>
+        </Nav>
+      </Navbar>
+
+      <div className="App">
+        <Switch>
+          <Route exact path='/reservations' component={ReservationsScreen} />
+          <Route exact path='/report' component={ReportScreen} />
+          <Route render={function () {
+            return <p>Not found</p>
+          }} />
+        </Switch>
+      </div>
+    </>
   );
 }
+
 
 export default App;
