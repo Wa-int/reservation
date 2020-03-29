@@ -1,5 +1,6 @@
 import LocalStorageService from "../LocalStorageSevice";
 import { ReservationForm, ReservationFormResponse, ReservationList } from "../../models/Customer";
+import moment from "moment";
 
 
 export class ReservationService {
@@ -11,7 +12,7 @@ export class ReservationService {
         return new Promise((resolve, reject) => {
             if (reservationForm) {
                 const reservationList = JSON.parse(LocalStorageService.getReservationList() || "[]") as ReservationForm[];
-                
+
                 reservationList.push(reservationForm);
                 const details = JSON.stringify(reservationList);
 
@@ -26,9 +27,9 @@ export class ReservationService {
      * Get Reservation Form
      */
 
-    public static getReservationsByDate(date: string | undefined): Promise<ReservationFormResponse> {
+    public static getReservationsByDate(date: string | null | undefined): Promise<ReservationFormResponse> {
         return new Promise((resolve, reject) => {
-            if (date) {
+            if (date && moment(date, 'YYYY-MM-DD', true).isValid()) {
                 const reservationList = JSON.parse(LocalStorageService.getReservationList() || "[]") as ReservationForm[];
                 const reservationFormResponse: ReservationFormResponse = { allTable: 0, reservationList: [] };
                 if (Array.isArray(reservationList) && reservationList.length > 0) {
@@ -63,7 +64,7 @@ export class ReservationService {
                         reservationList.reservationListDetails = value as ReservationForm[];
                         reservationList.total = totalByName;
                         reservationList.table = table;
-                        
+
                         reservationFormResponse.reservationList.push(reservationList);
                     }
                     reservationFormResponse.allTable = allTables;
@@ -72,7 +73,7 @@ export class ReservationService {
                     resolve(reservationFormResponse);
                 }
             } else {
-                reject(new Error('Unable to complete your request.'))
+                reject(new Error('Unable to complete your request.'));
             }
         });
     }
