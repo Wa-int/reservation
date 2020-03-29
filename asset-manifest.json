@@ -1,25 +1,25 @@
 {
   "files": {
-    "main.css": "/reservation/static/css/main.79816ffe.chunk.css",
-    "main.js": "/reservation/static/js/main.89b0da0f.chunk.js",
-    "main.js.map": "/reservation/static/js/main.89b0da0f.chunk.js.map",
-    "runtime-main.js": "/reservation/static/js/runtime-main.27074dd2.js",
-    "runtime-main.js.map": "/reservation/static/js/runtime-main.27074dd2.js.map",
-    "static/css/2.6df9c2a8.chunk.css": "/reservation/static/css/2.6df9c2a8.chunk.css",
-    "static/js/2.df354463.chunk.js": "/reservation/static/js/2.df354463.chunk.js",
-    "static/js/2.df354463.chunk.js.map": "/reservation/static/js/2.df354463.chunk.js.map",
-    "index.html": "/reservation/index.html",
-    "precache-manifest.67f4532075b64beb11635388bf22c464.js": "/reservation/precache-manifest.67f4532075b64beb11635388bf22c464.js",
-    "service-worker.js": "/reservation/service-worker.js",
-    "static/css/2.6df9c2a8.chunk.css.map": "/reservation/static/css/2.6df9c2a8.chunk.css.map",
-    "static/css/main.79816ffe.chunk.css.map": "/reservation/static/css/main.79816ffe.chunk.css.map",
-    "static/js/2.df354463.chunk.js.LICENSE.txt": "/reservation/static/js/2.df354463.chunk.js.LICENSE.txt"
+    "main.css": "/reservation/home/resevations/static/css/main.79816ffe.chunk.css",
+    "main.js": "/reservation/home/resevations/static/js/main.b4879efb.chunk.js",
+    "main.js.map": "/reservation/home/resevations/static/js/main.b4879efb.chunk.js.map",
+    "runtime-main.js": "/reservation/home/resevations/static/js/runtime-main.503254d5.js",
+    "runtime-main.js.map": "/reservation/home/resevations/static/js/runtime-main.503254d5.js.map",
+    "static/css/2.6df9c2a8.chunk.css": "/reservation/home/resevations/static/css/2.6df9c2a8.chunk.css",
+    "static/js/2.df354463.chunk.js": "/reservation/home/resevations/static/js/2.df354463.chunk.js",
+    "static/js/2.df354463.chunk.js.map": "/reservation/home/resevations/static/js/2.df354463.chunk.js.map",
+    "index.html": "/reservation/home/resevations/index.html",
+    "precache-manifest.5494c448da937b9db6c5e1c80f5ecb5e.js": "/reservation/home/resevations/precache-manifest.5494c448da937b9db6c5e1c80f5ecb5e.js",
+    "service-worker.js": "/reservation/home/resevations/service-worker.js",
+    "static/css/2.6df9c2a8.chunk.css.map": "/reservation/home/resevations/static/css/2.6df9c2a8.chunk.css.map",
+    "static/css/main.79816ffe.chunk.css.map": "/reservation/home/resevations/static/css/main.79816ffe.chunk.css.map",
+    "static/js/2.df354463.chunk.js.LICENSE.txt": "/reservation/home/resevations/static/js/2.df354463.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.27074dd2.js",
+    "static/js/runtime-main.503254d5.js",
     "static/css/2.6df9c2a8.chunk.css",
     "static/js/2.df354463.chunk.js",
     "static/css/main.79816ffe.chunk.css",
-    "static/js/main.89b0da0f.chunk.js"
+    "static/js/main.b4879efb.chunk.js"
   ]
 }
