@@ -23,9 +23,7 @@ export class ReservationService {
     }
 
     /**
-     * Use Lottery
-     * @path {PATCH} /lotteries/bonuses
-     * @return {Observable<UseLotteryResponse>} Observable<UseLotteryResponse>
+     * Get Reservation Form
      */
 
     public static getReservationsByDate(date: string | undefined): Promise<ReservationFormResponse> {
