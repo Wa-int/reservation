@@ -8,6 +8,8 @@ import ReservationService from '../../services/apis/Reservations';
 import { DateTimeFormat, FormUtils } from '../../services/apis/FormUtils';
 import { toast, ToastContainer } from 'react-toastify';
 
+interface Props {}
+
 interface State {
     firstName: string,
     lastName: string,
@@ -19,7 +21,7 @@ interface State {
     validated: boolean,
 }
 
-class ReservationsScreen extends React.Component<any, State>  {
+class ReservationsScreen extends React.Component<Props, State>  {
 
     constructor(props: any) {
         super(props);

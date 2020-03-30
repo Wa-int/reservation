@@ -6,6 +6,7 @@ import './report.scss';
 import { ReservationService } from '../../services/apis/Reservations';
 import moment, { Moment } from 'moment';
 
+interface Props {}
 interface State {
     reservationList: ReservationList[],
     summary: number,
@@ -13,7 +14,7 @@ interface State {
 }
 
 
-class ReportScreen extends React.Component<any, State>  {
+class ReportScreen extends React.Component<Props, State>  {
 
     constructor(props: any) {
         super(props);
