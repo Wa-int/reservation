@@ -53,6 +53,10 @@ class ReportScreen extends React.Component<Props, State>  {
                             <th>Tel</th>
                             <th>Total/Reservation</th>
                             <th>Total</th>
+<<<<<<< HEAD
+=======
+                            <th>Table</th>
+>>>>>>> parent of 9bc45c0... Updates
                         </tr>
                     </thead>
                         <tbody>
@@ -73,6 +77,10 @@ class ReportScreen extends React.Component<Props, State>  {
                                                     <td>{details.phone}</td>
                                                     <td>{details.total}</td>
                                                     {rowSpanCond && <td rowSpan={lengthSpan}>{customer.total}</td>}
+<<<<<<< HEAD
+=======
+                                                    {rowSpanCond && <td rowSpan={lengthSpan}>{customer.table}</td>}
+>>>>>>> parent of 9bc45c0... Updates
                                                 </tr>
                                             )
                                         })}
