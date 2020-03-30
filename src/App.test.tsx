@@ -1,12 +1,10 @@
 import { shallow, ShallowWrapper } from 'enzyme';
 import React from 'react';
-import ReservationsScreen from './screens/ReservationsScreen/reservations';
-import ReservationService from './services/apis/Reservations';
-import { toast as _Toast } from 'react-toastify';
-import { FormUtils } from './services/apis/FormUtils';
 import { ReservationForm } from './models/Customer';
-
-// const Toast = _Toast as jest.Mocked<typeof _Toast>;
+import ReservationsScreen from './screens/ReservationsScreen/reservations';
+import { FormUtils } from './services/apis/FormUtils';
+import ReservationService from './services/apis/Reservations';
+import moment from 'moment';
 
 const createProps = (props: any = {}) => {
   return {
@@ -28,6 +26,12 @@ describe('ReservationsScreen', () => {
     wrapper = loadComponent(createProps());
   });
 
+  it('Phone number validation should be false when phone is 0', () => {
+    const instance = wrapper.instance();
+    instance.setState({ firstName: 'Waint', lastName: 'Klinkasen', phone: '023232121', arrivalDate: moment(), arrivalTime: moment(), departureTime: moment().add(30, 'minutes'), total: 10 });
+    instance._onSubmit();
+    expect(wrapper.find('ToastContainer').length).toBe(1)
+  });
 });
 
 describe('ReservationService', () => {
@@ -54,7 +58,7 @@ describe('ReservationService', () => {
 
   describe('SaveReservationByDate', () => {
     it('should return true when input all fields', () => {
-      const formBody:ReservationForm = {
+      const formBody: ReservationForm = {
         firstName: 'Waint',
         lastName: 'Waint',
         arrivalDate: '2020-03-30',
@@ -67,7 +71,7 @@ describe('ReservationService', () => {
     })
 
     it('should return the error when Arrival Date format is not correct', () => {
-      const formBody:ReservationForm = {
+      const formBody: ReservationForm = {
         firstName: 'Waint',
         lastName: 'Waint',
         arrivalDate: '30/03/2020',
@@ -81,7 +85,7 @@ describe('ReservationService', () => {
     });
 
     it('should return the error when Departure Time is less than Arrival Time', () => {
-      const formBody:ReservationForm = {
+      const formBody: ReservationForm = {
         firstName: 'Waint',
         lastName: 'Waint',
         arrivalDate: '30/03/2020',
@@ -96,7 +100,7 @@ describe('ReservationService', () => {
   })
 
   it('should return the error when duration between Arrival Time and Departure Time is 0', () => {
-    const formBody:ReservationForm = {
+    const formBody: ReservationForm = {
       firstName: 'Waint',
       lastName: 'Waint',
       arrivalDate: '30/03/2020',
@@ -111,7 +115,7 @@ describe('ReservationService', () => {
 })
 
 it('should return the error when Arrival Date is the past dates', () => {
-  const formBody:ReservationForm = {
+  const formBody: ReservationForm = {
     firstName: 'Waint',
     lastName: 'Waint',
     arrivalDate: '1970-01-01',

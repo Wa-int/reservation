@@ -19,7 +19,6 @@ export class FormUtils {
             && this.validateDepartureTime(moment(form.arrivalTime, DateTimeFormat.time), moment(form.departureTime, DateTimeFormat.time))
             && this.validatePhone(form.phone)
             && this.validateNumber(form.total);
-
     }
 
     // Validate string

@@ -63,7 +63,7 @@ class ReservationsScreen extends React.Component<any, State>  {
                     position: toast.POSITION.TOP_CENTER,
                     autoClose: 3000,
                 });
-                window.location.reload(false);
+                this.clearData();
             })
             .catch((e: Error) => {
                 toast.error(e.message, {
@@ -102,6 +102,19 @@ class ReservationsScreen extends React.Component<any, State>  {
         }
     }
 
+    clearData() {
+        const now = moment();
+        this.setState({
+            firstName: '',
+            lastName: '',
+            phone: '',
+            arrivalDate: now,
+            arrivalTime: now,
+            departureTime: now,
+            total: 0,
+            validated: false,
+        })
+    }
 
     render() {
         const { firstName, lastName, phone, arrivalDate, arrivalTime, departureTime, total, validated } = this.state;
