@@ -53,8 +53,7 @@ export class ReservationService {
                         const totalByName = (value as ReservationForm[]).reduce((n, e) => n + Number(e.total), 0)
                         let table = 0;
 
-                        table = Math.floor(totalByName / unit)
-                        table = totalByName % unit > 0 ? table + 1 : table;
+                        table = Math.ceil(totalByName / unit);
 
                         allTables = allTables + table;
 
@@ -75,7 +74,7 @@ export class ReservationService {
             }
         });
     }
-
 }
+
 
 export default ReservationService;
