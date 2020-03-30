@@ -12,7 +12,6 @@ export class ReservationService {
         return new Promise((resolve, reject) => {
             if (reservationForm && FormUtils.validateForm(reservationForm)) {
                 const reservationList = JSON.parse(LocalStorageService.getReservationList() || "[]") as ReservationForm[];
-
                 reservationList.push(reservationForm);
                 const details = JSON.stringify(reservationList);
                 LocalStorageService.setReservationList(details)
@@ -33,7 +32,7 @@ export class ReservationService {
                 const reservationList = JSON.parse(LocalStorageService.getReservationList() || "[]") as ReservationForm[];
 
                 const unit = 4;
-                const allTables  = FormUtils.calculatePeriod(
+                const allTables = FormUtils.calculatePeriod(
                     // Convert Time (HH:mm A) to ISO String 
                     // Since It's hard to compare when creating a new Moment variable by time only
                     reservationList.filter((e) => e.arrivalDate === date).map((e) => {
@@ -41,7 +40,7 @@ export class ReservationService {
                         e.departureTime = moment(`${moment().format(DateTimeFormat.date)} ${e.departureTime}`).toISOString();
                         return e;
                     })
-                , unit);
+                    , unit);
 
                 const reservationFormResponse: ReservationFormResponse = { allTable: 0, reservationList: [] };
                 if (Array.isArray(reservationList) && reservationList.length > 0) {
@@ -60,7 +59,7 @@ export class ReservationService {
                     for (let [key, value] of Object.entries(result)) {
                         const reservationList: ReservationList = { name: '', total: 0, table: 0, reservationListDetails: [] };
                         const totalByName = (value as ReservationForm[]).reduce((n, e) => n + Number(e.total), 0)
-                        
+
                         const table = Math.ceil(totalByName / unit);
                         reservationList.name = key;
                         reservationList.reservationListDetails = value as ReservationForm[];
@@ -70,10 +69,8 @@ export class ReservationService {
                         reservationFormResponse.reservationList.push(reservationList);
                     }
                     reservationFormResponse.allTable = allTables;
-                    resolve(reservationFormResponse);
-                } else {
-                    resolve(reservationFormResponse);
                 }
+                resolve(reservationFormResponse);
             } else {
                 reject(new Error('Unable to complete your request.'));
             }

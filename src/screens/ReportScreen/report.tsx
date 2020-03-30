@@ -5,6 +5,7 @@ import { ReservationList } from '../../models/Customer';
 import './report.scss';
 import { ReservationService } from '../../services/apis/Reservations';
 import moment, { Moment } from 'moment';
+import { DateTimeFormat } from '../../services/FormUtils';
 
 interface Props {}
 interface State {
@@ -23,7 +24,6 @@ class ReportScreen extends React.Component<Props, State>  {
             selectedDate: moment(),
             summary: 0,
         };
-
     }
 
     componentDidMount() {
@@ -31,7 +31,7 @@ class ReportScreen extends React.Component<Props, State>  {
     }
 
     getReservationList(selectedDate: Moment) {
-        ReservationService.getReservationsByDate(selectedDate.format('YYYY-MM-DD'))
+        ReservationService.getReservationsByDate(selectedDate.format(DateTimeFormat.date))
             .then((data) => {
                 this.setState({ reservationList: data.reservationList, summary: data.allTable });
             })
