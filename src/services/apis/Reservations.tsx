@@ -1,7 +1,7 @@
-import LocalStorageService from "../LocalStorageSevice";
-import { ReservationForm, ReservationFormResponse, ReservationList } from "../../models/Customer";
 import moment from "moment";
-
+import { ReservationForm, ReservationFormResponse, ReservationList } from "../../models/Customer";
+import LocalStorageService from "../LocalStorageSevice";
+import { DateTimeFormat, FormUtils } from "./FormUtils";
 
 export class ReservationService {
 
@@ -10,7 +10,7 @@ export class ReservationService {
      */
     public static saveReservations(reservationForm: ReservationForm | undefined): Promise<void> {
         return new Promise((resolve, reject) => {
-            if (reservationForm) {
+            if (reservationForm && FormUtils.validateForm(reservationForm)) {
                 const reservationList = JSON.parse(LocalStorageService.getReservationList() || "[]") as ReservationForm[];
 
                 reservationList.push(reservationForm);
@@ -29,7 +29,7 @@ export class ReservationService {
 
     public static getReservationsByDate(date: string | null | undefined): Promise<ReservationFormResponse> {
         return new Promise((resolve, reject) => {
-            if (date && moment(date, 'YYYY-MM-DD', true).isValid()) {
+            if (date && moment(date, DateTimeFormat.date, true).isValid()) {
                 const reservationList = JSON.parse(LocalStorageService.getReservationList() || "[]") as ReservationForm[];
                 const reservationFormResponse: ReservationFormResponse = { allTable: 0, reservationList: [] };
                 if (Array.isArray(reservationList) && reservationList.length > 0) {
@@ -37,7 +37,7 @@ export class ReservationService {
                     let result = reservationList
                         .filter((e) => e.arrivalDate === date)
                         // Group by First name + Last name.
-                        // In case a customer reserves more than 1.
+                        // In case a customer reserves more than 1 in this day.
                         .reduce((r, a) => {
                             const key = `${a.firstName.toUpperCase()} ${a.lastName.toUpperCase()}`
                             r[key] = r[key] || [];
@@ -50,9 +50,7 @@ export class ReservationService {
 
                     for (let [key, value] of Object.entries(result)) {
                         const reservationList: ReservationList = { name: '', total: 0, table: 0, reservationListDetails: [] };
-
                         const totalByName = (value as ReservationForm[]).reduce((n, e) => n + Number(e.total), 0)
-
                         let table = 0;
 
                         table = Math.floor(totalByName / unit)

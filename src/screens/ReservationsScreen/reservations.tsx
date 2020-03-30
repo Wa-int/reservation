@@ -5,6 +5,8 @@ import { Button, Col, Form } from 'react-bootstrap';
 import { ReservationForm } from '../../models/Customer';
 import './reservations.scss';
 import ReservationService from '../../services/apis/Reservations';
+import { DateTimeFormat, FormUtils } from '../../services/apis/FormUtils';
+import { toast, ToastContainer } from 'react-toastify';
 
 interface State {
     firstName: string,
@@ -18,7 +20,6 @@ interface State {
 }
 
 class ReservationsScreen extends React.Component<any, State>  {
-    timeFormat: string;
 
     constructor(props: any) {
         super(props);
@@ -34,11 +35,8 @@ class ReservationsScreen extends React.Component<any, State>  {
             total: 0,
             validated: false,
         };
-        this.timeFormat = 'h:mm a';
         this._onSubmit = this._onSubmit.bind(this);
     }
-
-    componentDidMount() { }
 
     handleOnChangeArrivalDate(date: moment.Moment | null) {
         if (date) {
@@ -46,32 +44,32 @@ class ReservationsScreen extends React.Component<any, State>  {
         }
     }
 
-    async _onSubmit() {
+    _onSubmit() {
         this.setState({ validated: true });
-        const isAllCorrect = this.validateForm();
+        const formBody = this.getFormBody();
+        const isAllCorrect = FormUtils.validateForm(formBody);
 
         if (!isAllCorrect) {
+            toast.warn('Please correct your information!', {
+                position: toast.POSITION.TOP_CENTER,
+                autoClose: 2000,
+            });
             return;
         }
 
-        const { firstName, lastName, phone, arrivalDate, arrivalTime, departureTime, total } = this.state
-
-        const reservationForm: ReservationForm = {
-            firstName,
-            lastName,
-            phone,
-            arrivalDate: arrivalDate.format('YYYY-MM-DD'),
-            arrivalTime: arrivalTime.format(this.timeFormat),
-            departureTime: departureTime.format(this.timeFormat),
-            total
-        }
-
-        ReservationService.saveReservations(reservationForm)
+        ReservationService.saveReservations(formBody)
             .then(() => {
+                toast.success("Your reservations is successful.", {
+                    position: toast.POSITION.TOP_CENTER,
+                    autoClose: 3000,
+                });
                 window.location.reload(false);
             })
-            .catch((e) => {
-                console.log(e);
+            .catch((e: Error) => {
+                toast.error(e.message, {
+                    position: toast.POSITION.TOP_CENTER,
+                    autoClose: 3000,
+                });
             });
     }
 
@@ -81,7 +79,6 @@ class ReservationsScreen extends React.Component<any, State>  {
             return;
         }
         this.setState({ total: total })
-
     }
 
     handleOnChangePhoneNumber(event: any) {
@@ -92,169 +89,148 @@ class ReservationsScreen extends React.Component<any, State>  {
         this.setState({ phone })
     }
 
-    validateForm(): boolean {
-        const { firstName, lastName, total } = this.state;
-        return firstName.length > 0
-            && lastName.length > 0
-            && this.validateArrivalTime()
-            && this.validateDepartureTime()
-            && this.validateDay()
-            && this.validatePhone()
-            && total > 0;
-
-    }
-    validateDepartureTime(): boolean {
-        const { arrivalTime, departureTime } = this.state;
-        arrivalTime.set({second:0,millisecond:0});
-        departureTime.set({second:0,millisecond:0});
-        return arrivalTime.isBefore(departureTime);
+    getFormBody(): ReservationForm {
+        const { firstName, lastName, phone, arrivalDate, arrivalTime, departureTime, total } = this.state
+        return {
+            firstName,
+            lastName,
+            phone,
+            arrivalDate: arrivalDate.format(DateTimeFormat.date),
+            arrivalTime: arrivalTime.format(DateTimeFormat.time),
+            departureTime: departureTime.format(DateTimeFormat.time),
+            total
+        }
     }
 
-    validateArrivalTime(): boolean {
-        const { arrivalTime, arrivalDate } = this.state;
-        const selectedTime = moment(`${arrivalDate.format('YYYY-MM-DD')} ${arrivalTime.format('HH:mm')}`);
-        const now = moment().set({second:0,millisecond:0})
-        return selectedTime.isSameOrAfter(now);
-    }
-
-    validatePhone(): boolean {
-        const { phone } = this.state;
-        const phoneFormat = /^[0][1-9]\d{7}$|^[0][1-9]\d{8}$/;
-        return phoneFormat.test(phone)
-    }
-
-    validateDay(): boolean {
-        const { arrivalDate } = this.state;
-        const today = moment();
-        return today.isSameOrBefore(arrivalDate, 'day');
-    }
 
     render() {
         const { firstName, lastName, phone, arrivalDate, arrivalTime, departureTime, total, validated } = this.state;
         return (
-            <Form validated={this.validateForm()}>
-                <div className="header-boundary">
-                    <h3>Reservation Form</h3>
-                    <h5>Please fill the form below accurately to enable us serve you better!.. welcome!</h5>
-                </div>
-                <div className="forms-body">
-                    <Form.Row>
-                        <Form.Group as={Col} controlId="validationCustom01">
-                            <Form.Label>First name</Form.Label>
-                            <Form.Control
-                                required
-                                type="text"
-                                placeholder="First name"
-                                value={firstName}
-                                onChange={(event: any) => { this.setState({ firstName: event.target.value }) }}
-                                isInvalid={firstName.length === 0 && validated}
-                            />
-                            <Form.Control.Feedback type="invalid">
-                                First name is required
-                        </Form.Control.Feedback>
-                        </Form.Group>
-                        <Form.Group as={Col} controlId="validationCustom02">
-                            <Form.Label>Last name</Form.Label>
-                            <Form.Control
-                                required
-                                type="text"
-                                placeholder="Last name"
-                                value={lastName}
-                                onChange={(event: any) => { this.setState({ lastName: event.target.value }) }}
-                                isInvalid={lastName.length === 0 && validated}
-                            />
-                            <Form.Control.Feedback type="invalid">
-                                Last name is required
-                        </Form.Control.Feedback>
-                        </Form.Group>
-                    </Form.Row>
-                    <Form.Row>
-                        <Form.Group as={Col} controlId="validationCustom02">
-                            <Form.Label>Phone number</Form.Label>
-                            <Form.Control
-                                required
-                                type="number"
-                                placeholder="Phone number"
-                                value={phone}
-                                onChange={(event: any) => this.handleOnChangePhoneNumber(event)}
-                                isInvalid={!this.validatePhone() && validated}
-                            />
-                            <Form.Control.Feedback type="invalid">
-                                Phone number is not correct (0XXXXXXX)
-                        </Form.Control.Feedback>
-                        </Form.Group>
-                    </Form.Row>
-                    <Form.Row className='body-group'>
-                        <Form.Group as={Col} md="3" controlId="validationCustom03">
-                            <Form.Label>Arrival Date</Form.Label>
-                            <div className={!this.validateDay() && validated ? 'time-input-warning' : ''}>
-                                <DatePicker
-                                    defaultValue={arrivalDate}
-                                    onChange={(date) => this.handleOnChangeArrivalDate(date)}
-                                    allowClear={false}
-                                />
-                            </div>
-                            {!this.validateDay() && validated &&
-                                <div className="custom-warning">
-                                    <Form.Text>Cannot select in past dates</Form.Text>
-                                </div>
-                            }
-                        </Form.Group>
-                        <Form.Group as={Col} md="3" controlId="validationCustom04">
-                            <Form.Label>Arrival Time</Form.Label>
-                            <div className={!this.validateArrivalTime() && validated ? 'time-input-warning' : ''}>
-                                <TimePicker
-                                    defaultValue={arrivalTime}
-                                    format={this.timeFormat}
-                                    onChange={(time) => time ? this.setState({ arrivalTime: time }) : time}
-                                    allowClear={false}
-                                />
-                            </div>
-                            {!this.validateArrivalTime() && validated &&
-                                <div className="custom-warning">
-                                    <Form.Text>Arrival Time cannot be less than Now</Form.Text>
-                                </div>
-                            }
-                        </Form.Group>
-                        <Form.Group as={Col} md="3" controlId="validationCustom05">
-                            <Form.Label>Departure Time</Form.Label>
-                            <div className={!this.validateDepartureTime() && validated ? 'time-input-warning' : ''}>
-                                <TimePicker
-                                    defaultValue={departureTime}
-                                    format={this.timeFormat}
-                                    onChange={(time) => time ? this.setState({ departureTime: time }) : time}
-                                    allowClear={false}
-                                />
-                            </div>
-                            {!this.validateDepartureTime() && validated &&
-                                <div className="custom-warning">
-                                    <Form.Text>Departure Time must be more than Arrival Time</Form.Text>
-                                </div>
-                            }
-                        </Form.Group>
-                    </Form.Row>
-                    <Form.Row>
-                        <Form.Group as={Col} controlId="validationCustom02">
-                            <Form.Label>Total</Form.Label>
-                            <Form.Control
-                                required
-                                type="number"
-                                placeholder="Total"
-                                value={total}
-                                onChange={(event: any) => { this.handleOnChangeTotal(event) }}
-                                isInvalid={total === 0 && validated}
-                            />
-                            <Form.Control.Feedback type="invalid">
-                                Total is required
-                        </Form.Control.Feedback>
-                        </Form.Group>
-                    </Form.Row>
-                    <div className="submit-button-container">
-                        <Button type="button" onClick={this._onSubmit}>Submit</Button>
+            <>
+                <Form validated={FormUtils.validateForm(this.getFormBody())}>
+                    <div className="header-boundary">
+                        <h3>Reservation Form</h3>
+                        <h5>Please fill the form below accurately to enable us serve you better!.. welcome!</h5>
                     </div>
-                </div>
-            </Form >
-
+                    <div className="forms-body">
+                        <Form.Row>
+                            <Form.Group as={Col} controlId="validationCustom01">
+                                <Form.Label>First name</Form.Label>
+                                <Form.Control
+                                    required
+                                    type="text"
+                                    placeholder="First name"
+                                    value={firstName}
+                                    onChange={(event: any) => { this.setState({ firstName: event.target.value }) }}
+                                    isInvalid={!FormUtils.validateText(firstName) && validated}
+                                />
+                                <Form.Control.Feedback type="invalid">
+                                    First name is required
+                        </Form.Control.Feedback>
+                            </Form.Group>
+                            <Form.Group as={Col} controlId="validationCustom02">
+                                <Form.Label>Last name</Form.Label>
+                                <Form.Control
+                                    required
+                                    type="text"
+                                    placeholder="Last name"
+                                    value={lastName}
+                                    onChange={(event: any) => { this.setState({ lastName: event.target.value }) }}
+                                    isInvalid={!FormUtils.validateText(lastName) && validated}
+                                />
+                                <Form.Control.Feedback type="invalid">
+                                    Last name is required
+                        </Form.Control.Feedback>
+                            </Form.Group>
+                        </Form.Row>
+                        <Form.Row>
+                            <Form.Group as={Col} controlId="validationCustom03">
+                                <Form.Label>Phone number</Form.Label>
+                                <Form.Control
+                                    required
+                                    type="number"
+                                    placeholder="Phone number"
+                                    value={phone}
+                                    onChange={(event: any) => this.handleOnChangePhoneNumber(event)}
+                                    isInvalid={!FormUtils.validatePhone(phone) && validated}
+                                />
+                                <Form.Control.Feedback type="invalid">
+                                    Phone number is not correct (0XXXXXXX) or (0XXXXXXX-X)
+                        </Form.Control.Feedback>
+                            </Form.Group>
+                        </Form.Row>
+                        <Form.Row className='body-group'>
+                            <Form.Group as={Col} md="3" controlId="validationCustom04">
+                                <Form.Label>Arrival Date</Form.Label>
+                                <div className={!FormUtils.validateDate(arrivalDate) && validated ? 'time-input-warning' : undefined}>
+                                    <DatePicker
+                                        defaultValue={arrivalDate}
+                                        onChange={(date) => this.handleOnChangeArrivalDate(date)}
+                                        allowClear={false}
+                                    />
+                                </div>
+                                {!FormUtils.validateDate(arrivalDate) && validated &&
+                                    <div className="custom-warning">
+                                        <Form.Text>Cannot select in past dates</Form.Text>
+                                    </div>
+                                }
+                            </Form.Group>
+                            <Form.Group as={Col} md="3" controlId="validationCustom04">
+                                <Form.Label>Arrival Time</Form.Label>
+                                <div className={!FormUtils.validateArrivalTime(arrivalDate, arrivalTime) && validated ? 'time-input-warning' : ''}>
+                                    <TimePicker
+                                        defaultValue={arrivalTime}
+                                        format={DateTimeFormat.time}
+                                        onChange={(time) => time ? this.setState({ arrivalTime: time }) : time}
+                                        allowClear={false}
+                                    />
+                                </div>
+                                {!FormUtils.validateArrivalTime(arrivalDate, arrivalTime) && validated &&
+                                    <div className="custom-warning">
+                                        <Form.Text>Arrival Time cannot be less than Now</Form.Text>
+                                    </div>
+                                }
+                            </Form.Group>
+                            <Form.Group as={Col} md="3" controlId="validationCustom06">
+                                <Form.Label>Departure Time</Form.Label>
+                                <div className={!FormUtils.validateDepartureTime(arrivalTime, departureTime) && validated ? 'time-input-warning' : ''}>
+                                    <TimePicker
+                                        defaultValue={departureTime}
+                                        format={DateTimeFormat.time}
+                                        onChange={(time) => time ? this.setState({ departureTime: time }) : time}
+                                        allowClear={false}
+                                    />
+                                </div>
+                                {!FormUtils.validateDepartureTime(arrivalTime, departureTime) && validated &&
+                                    <div className="custom-warning">
+                                        <Form.Text>Departure Time must be more than Arrival Time</Form.Text>
+                                    </div>
+                                }
+                            </Form.Group>
+                        </Form.Row>
+                        <Form.Row>
+                            <Form.Group as={Col} controlId="validationCustom02">
+                                <Form.Label>Total</Form.Label>
+                                <Form.Control
+                                    required
+                                    type="number"
+                                    placeholder="Total"
+                                    value={total}
+                                    onChange={(event: any) => { this.handleOnChangeTotal(event) }}
+                                    isInvalid={(String(total).length <= 0 || total === 0) && validated}
+                                />
+                                <Form.Control.Feedback type="invalid">
+                                    Total is required
+                        </Form.Control.Feedback>
+                            </Form.Group>
+                        </Form.Row>
+                        <div className="submit-button-container">
+                            <Button type="button" onClick={this._onSubmit}>Submit</Button>
+                        </div>
+                    </div>
+                </Form >
+                <ToastContainer />
+            </>
         )
     }
 }

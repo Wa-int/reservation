@@ -55,33 +55,34 @@ class ReportScreen extends React.Component<any, State>  {
                             <th>Table</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        {reservationList.map((customer, i) => {
-                            const lengthSpan = customer.reservationListDetails.length;
-                            return (
-                                <>
-                                    {customer.reservationListDetails.map((details, j) => {
-                                        const key = `${i}${j}-${customer.name}-${details.arrivalTime}`
-                                        count = count + 1;
-                                        return (
-                                            <tr key={key}>
-                                                <td>{count}</td>
-                                                {j === 0 && <td rowSpan={lengthSpan}>{customer.name}</td>}
-                                                <td>{details.arrivalTime}</td>
-                                                <td>{details.departureTime}</td>
-                                                <td>{details.phone}</td>
-                                                <td>{details.total}</td>
-                                                {j === 0 && <td rowSpan={lengthSpan}>{customer.total}</td>}
-                                                {j === 0 && <td rowSpan={lengthSpan}>{customer.table}</td>}
-                                            </tr>
-                                        )
-                                    })}
-                                </>
-                            )
-                        })}
-                    </tbody>
+                        <tbody>
+                            {reservationList.map((customer, i) => {
+                                const lengthSpan = customer.reservationListDetails.length;
+                                return (
+                                    <>
+                                        {customer.reservationListDetails.map((details, j) => {
+                                            const key = `${i}${j}-${customer.name}-${details.arrivalTime}-${details.departureTime}--${details.phone}-${details.total}`
+                                            const rowSpanCond = j === 0 ? true : false;
+                                            count = count + 1;
+                                            return (
+                                                <tr key={key}>
+                                                    <td>{count}</td>
+                                                    {rowSpanCond && <td rowSpan={lengthSpan}>{customer.name}</td>}
+                                                    <td>{details.arrivalTime}</td>
+                                                    <td>{details.departureTime}</td>
+                                                    <td>{details.phone}</td>
+                                                    <td>{details.total}</td>
+                                                    {rowSpanCond && <td rowSpan={lengthSpan}>{customer.total}</td>}
+                                                    {rowSpanCond && <td rowSpan={lengthSpan}>{customer.table}</td>}
+                                                </tr>
+                                            )
+                                        })}
+                                    </>
+                                )
+                            })}
+                        </tbody>
                 </Table>
-                <div className='summary-style '>
+                <div className='summary-style'>
                     {`Summary: ${summary} Table(s)`}
                 </div>
             </div>

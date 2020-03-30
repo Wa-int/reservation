@@ -15,7 +15,6 @@
     "bootstrap": "^4.4.1",
     "enzyme": "^3.0.0",
     "enzyme-adapter-react-16": "^1.0.2",
-    "react-scripts-ts": "2.8.0",
     "gh-pages": "^2.2.0",
     "node-sass": "^4.13.1",
     "react": "^16.13.1",
@@ -24,7 +23,9 @@
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.1",
+    "react-scripts-ts": "2.8.0",
     "react-test-renderer": "^16.13.1",
+    "react-toastify": "^5.5.0",
     "typescript": "~3.7.2"
   },
   "scripts": {
