@@ -1,7 +1,7 @@
 import moment from "moment";
 import { ReservationForm, ReservationFormResponse, ReservationList } from "../../models/Customer";
 import LocalStorageService from "../LocalStorageSevice";
-import { DateTimeFormat, FormUtils } from "./FormUtils";
+import { FormUtils, DateTimeFormat } from "../FormUtils";
 
 export class ReservationService {
 
@@ -31,6 +31,18 @@ export class ReservationService {
         return new Promise((resolve, reject) => {
             if (date && moment(date, DateTimeFormat.date, true).isValid()) {
                 const reservationList = JSON.parse(LocalStorageService.getReservationList() || "[]") as ReservationForm[];
+
+                const unit = 4;
+                const allTables  = FormUtils.calculatePeriod(
+                    // Convert Time (HH:mm A) to ISO String 
+                    // Since It's hard to compare when creating a new Moment variable by time only
+                    reservationList.filter((e) => e.arrivalDate === date).map((e) => {
+                        e.arrivalTime = moment(`${moment().format(DateTimeFormat.date)} ${e.arrivalTime}`).toISOString();
+                        e.departureTime = moment(`${moment().format(DateTimeFormat.date)} ${e.departureTime}`).toISOString();
+                        return e;
+                    })
+                , unit);
+
                 const reservationFormResponse: ReservationFormResponse = { allTable: 0, reservationList: [] };
                 if (Array.isArray(reservationList) && reservationList.length > 0) {
 
@@ -45,18 +57,11 @@ export class ReservationService {
                             return r;
                         }, Object.create(null));
 
-                    let allTables = 0;
-                    const unit = 4;
-
                     for (let [key, value] of Object.entries(result)) {
                         const reservationList: ReservationList = { name: '', total: 0, table: 0, reservationListDetails: [] };
                         const totalByName = (value as ReservationForm[]).reduce((n, e) => n + Number(e.total), 0)
-                        let table = 0;
-
-                        table = Math.ceil(totalByName / unit);
-
-                        allTables = allTables + table;
-
+                        
+                        const table = Math.ceil(totalByName / unit);
                         reservationList.name = key;
                         reservationList.reservationListDetails = value as ReservationForm[];
                         reservationList.total = totalByName;

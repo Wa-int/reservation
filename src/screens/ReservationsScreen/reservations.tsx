@@ -5,7 +5,7 @@ import { Button, Col, Form } from 'react-bootstrap';
 import { ReservationForm } from '../../models/Customer';
 import './reservations.scss';
 import ReservationService from '../../services/apis/Reservations';
-import { DateTimeFormat, FormUtils } from '../../services/apis/FormUtils';
+import { DateTimeFormat, FormUtils } from '../../services/FormUtils';
 import { toast, ToastContainer } from 'react-toastify';
 
 interface Props {}

@@ -1,5 +1,6 @@
 import moment, { Moment } from "moment";
-import { ReservationForm } from "../../models/Customer";
+import { ReservationForm } from "../models/Customer";
+
 
 export const DateTimeFormat = {
     date: 'YYYY-MM-DD',
@@ -62,5 +63,44 @@ export class FormUtils {
         return phoneFormat.test(phone)
     }
 
+    public static calculatePeriod(customer: ReservationForm[], unit: number) : number {
+        customer.sort((a, b) => moment(a.arrivalTime).diff(moment(b.arrivalTime)));
+        if (customer.length > 0) {
+          if (customer.length > 1) {
+            const numberCandidate = [];
+            let tableByPeriod = Math.ceil(customer[0].total / unit)
+            let arrivalTime = moment(customer[0].arrivalTime).valueOf();
+            let departureTime = moment(customer[0].departureTime).valueOf();
+            let tempIndex = -1; // For coming back to period that it's needed to start checking again.
+            for (let i = 1; i < customer.length; i++) {
+                const currentArrivalTime = moment(customer[i].arrivalTime).valueOf();
+                const currentDepartureTime = moment(customer[i].departureTime).valueOf();
+                if (currentDepartureTime <= departureTime) {
+                    tableByPeriod = tableByPeriod + Math.ceil(customer[i].total / unit);
+                } else if (currentDepartureTime > departureTime && currentArrivalTime < departureTime) {
+                    tableByPeriod = tableByPeriod + Math.ceil(customer[i].total / unit);
+                    tempIndex = tempIndex === -1 ? i : tempIndex;
+                } else if (currentArrivalTime >= departureTime){
+                    numberCandidate.push(tableByPeriod)
+                    if (tempIndex !== -1) {
+                        i = tempIndex;
+                    }
+                    tempIndex = -1;  
+                    tableByPeriod = Math.ceil(customer[i].total / unit);
+                    arrivalTime = moment(customer[i].arrivalTime).valueOf();
+                    departureTime = moment(customer[i].departureTime).valueOf();
+                }
 
+              if (i === customer.length - 1) {
+                numberCandidate.push(tableByPeriod);
+              }
+            }
+            return Math.max(...numberCandidate);
+          } else {
+            return Math.ceil(customer[0].total / unit);
+          }
+        } else {
+          return 0;
+        }
+      }
 }
