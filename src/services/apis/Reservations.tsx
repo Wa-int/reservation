@@ -8,15 +8,15 @@ export class ReservationService {
     /**
      * Save Reservation Form
      */
-    public static saveReservations(reservationForm: ReservationForm | undefined): Promise<void> {
+    public static saveReservations(reservationForm: ReservationForm | undefined): Promise<boolean> {
         return new Promise((resolve, reject) => {
             if (reservationForm && FormUtils.validateForm(reservationForm)) {
                 const reservationList = JSON.parse(LocalStorageService.getReservationList() || "[]") as ReservationForm[];
 
                 reservationList.push(reservationForm);
                 const details = JSON.stringify(reservationList);
-
-                resolve(LocalStorageService.setReservationList(details));
+                LocalStorageService.setReservationList(details)
+                resolve(true);
             } else {
                 reject(new Error('Data could not be saved, please try again.'))
             }

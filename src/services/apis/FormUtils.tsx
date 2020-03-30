@@ -10,10 +10,11 @@ export class FormUtils {
 
     // Validate all
     public static validateForm(form: ReservationForm): boolean {
-    
+
         return this.validateText(form.firstName)
             && this.validateText(form.lastName)
             && this.validateDate(moment(form.arrivalDate))
+            && this.validateDateFormat(form.arrivalDate)
             && this.validateArrivalTime(moment(form.arrivalDate), moment(form.arrivalDate, DateTimeFormat.time))
             && this.validateDepartureTime(moment(form.arrivalTime, DateTimeFormat.time), moment(form.departureTime, DateTimeFormat.time))
             && this.validatePhone(form.phone)
@@ -35,6 +36,11 @@ export class FormUtils {
     public static validateDate(arrivalDate: Moment): boolean {
         const today = moment();
         return today.isSameOrBefore(arrivalDate, 'day');
+    }
+
+    // Expect YYYY-MM-DD format
+    public static validateDateFormat(date: string): boolean {
+        return moment(date, DateTimeFormat.date, true).isValid();
     }
 
     // Arrival Time must be equare equal to or more than now
