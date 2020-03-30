@@ -30,7 +30,7 @@ export class ReservationService {
         return new Promise((resolve, reject) => {
             if (date && FormUtils.validateDateFormat(date)) {
                 let reservationList = JSON.parse(LocalStorageService.getReservationList() || "[]") as ReservationForm[];
-                reservationList  = reservationList.filter((e) => e.arrivalDate === date);
+                reservationList = reservationList.filter((e) => e.arrivalDate === date);
                 const unit = 4;
                 const allTables = FormUtils.calculatePeriod(
                     // Convert Time (HH:mm A) to ISO String 
@@ -41,7 +41,6 @@ export class ReservationService {
                         return e;
                     })
                     , unit);
-
                 const reservationFormResponse: ReservationFormResponse = { allTable: 0, reservationList: [] };
                 if (Array.isArray(reservationList) && reservationList.length > 0) {
                     let result = reservationList

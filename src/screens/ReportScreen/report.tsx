@@ -53,7 +53,6 @@ class ReportScreen extends React.Component<Props, State>  {
                             <th>Tel</th>
                             <th>Total/Reservation</th>
                             <th>Total</th>
-                            <th>Table</th>
                         </tr>
                     </thead>
                         <tbody>
@@ -74,7 +73,6 @@ class ReportScreen extends React.Component<Props, State>  {
                                                     <td>{details.phone}</td>
                                                     <td>{details.total}</td>
                                                     {rowSpanCond && <td rowSpan={lengthSpan}>{customer.total}</td>}
-                                                    {rowSpanCond && <td rowSpan={lengthSpan}>{customer.table}</td>}
                                                 </tr>
                                             )
                                         })}
