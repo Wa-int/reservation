@@ -2,8 +2,8 @@ import React from 'react';
 import { Nav, Navbar } from 'react-bootstrap';
 import { Route, Switch } from "react-router-dom";
 import './App.scss';
-import ReservationsScreen from './screens/ReservationsScreen/reservations';
 import ReportScreen from './screens/ReportScreen/report';
+import ReservationsScreen from './screens/ReservationsScreen/reservations';
 
 function App() {
   return (

@@ -62,7 +62,7 @@ export class FormUtils {
         return phoneFormat.test(phone)
     }
 
-    public static calculatePeriod(customer: ReservationForm[], unit: number): number {
+    public static calculateTables(customer: ReservationForm[], unit: number): number {
         customer.sort((a, b) => moment(a.arrivalTime).diff(moment(b.arrivalTime)));
         if (customer.length > 0) {
             if (customer.length > 1) {

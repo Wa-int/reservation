@@ -32,7 +32,7 @@ export class ReservationService {
                 let reservationList = JSON.parse(LocalStorageService.getReservationList() || "[]") as ReservationForm[];
                 reservationList = reservationList.filter((e) => e.arrivalDate === date);
                 const unit = 4;
-                const allTables = FormUtils.calculatePeriod(
+                const allTables = FormUtils.calculateTables(
                     // Convert Time (HH:mm A) to ISO String 
                     // Since It's hard to compare when creating a new Moment variable by time only
                     reservationList.map((e) => {
