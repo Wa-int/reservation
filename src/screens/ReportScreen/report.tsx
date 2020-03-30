@@ -69,8 +69,8 @@ class ReportScreen extends React.Component<Props, State>  {
                                                 <tr key={key}>
                                                     <td>{count}</td>
                                                     {rowSpanCond && <td rowSpan={lengthSpan}>{customer.name}</td>}
-                                                    <td>{details.arrivalTime}</td>
-                                                    <td>{details.departureTime}</td>
+                                                    <td>{moment(details.arrivalTime).format(DateTimeFormat.time)}</td>
+                                                    <td>{moment(details.departureTime).format(DateTimeFormat.time)}</td>
                                                     <td>{details.phone}</td>
                                                     <td>{details.total}</td>
                                                     {rowSpanCond && <td rowSpan={lengthSpan}>{customer.total}</td>}

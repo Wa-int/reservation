@@ -28,14 +28,14 @@ export class ReservationService {
 
     public static getReservationsByDate(date: string | null | undefined): Promise<ReservationFormResponse> {
         return new Promise((resolve, reject) => {
-            if (date && moment(date, DateTimeFormat.date, true).isValid()) {
-                const reservationList = JSON.parse(LocalStorageService.getReservationList() || "[]") as ReservationForm[];
-
+            if (date && FormUtils.validateDateFormat(date)) {
+                let reservationList = JSON.parse(LocalStorageService.getReservationList() || "[]") as ReservationForm[];
+                reservationList  = reservationList.filter((e) => e.arrivalDate === date);
                 const unit = 4;
                 const allTables = FormUtils.calculatePeriod(
                     // Convert Time (HH:mm A) to ISO String 
                     // Since It's hard to compare when creating a new Moment variable by time only
-                    reservationList.filter((e) => e.arrivalDate === date).map((e) => {
+                    reservationList.map((e) => {
                         e.arrivalTime = moment(`${moment().format(DateTimeFormat.date)} ${e.arrivalTime}`).toISOString();
                         e.departureTime = moment(`${moment().format(DateTimeFormat.date)} ${e.departureTime}`).toISOString();
                         return e;
@@ -44,9 +44,7 @@ export class ReservationService {
 
                 const reservationFormResponse: ReservationFormResponse = { allTable: 0, reservationList: [] };
                 if (Array.isArray(reservationList) && reservationList.length > 0) {
-
                     let result = reservationList
-                        .filter((e) => e.arrivalDate === date)
                         // Group by First name + Last name.
                         // In case a customer reserves more than 1 in this day.
                         .reduce((r, a) => {
