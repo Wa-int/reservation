@@ -29,11 +29,7 @@
   },
   "scripts": {
     "predeploy": "npm run build",
-<<<<<<< HEAD
     "deploy": "gh-pages -b develop -d build",
-=======
-    "deploy": "gh-pages -b master -d build",
->>>>>>> parent of 9bc45c0... Updates
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
@@ -54,19 +50,10 @@
       "last 1 safari version"
     ]
   },
-<<<<<<< HEAD
-=======
-  "homepage": "https://pokpakorn.github.io/reservations",
->>>>>>> parent of 9bc45c0... Updates
   "devDependencies": {
     "@types/enzyme-adapter-react-16": "^1.0.6",
     "@types/react-dom": "^16.9.5",
     "@types/react-router-dom": "^5.1.3"
-<<<<<<< HEAD
   },
   "homepage": "/home"
 }
-=======
-  }
-}
->>>>>>> parent of 9bc45c0... Updates
