@@ -55,7 +55,7 @@ export class ReservationService {
 
                     for (let [key, value] of Object.entries(result)) {
                         const reservationList: ReservationList = { name: '', total: 0, table: 0, reservationListDetails: [] };
-                        const totalByName = (value as ReservationForm[]).reduce((n, e) => n + Number(e.total), 0)
+                        const totalByName = (value as ReservationForm[]).reduce((n, e) => n + Number(e.total), 0);
 
                         const table = Math.ceil(totalByName / unit);
                         reservationList.name = key;
