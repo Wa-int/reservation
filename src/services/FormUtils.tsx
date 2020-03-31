@@ -79,7 +79,7 @@ export class FormUtils {
             if (customer.length > 1) {
                 const numberCandidate = [];
                 let departureTime = moment(customer[0].departureTime).valueOf();
-                let tempNameList: UniqueCustomerName[] = [];
+                let tempNameList: UniqueCustomerName[] = [{ name: `${customer[0].firstName} ${customer[0].lastName}`, total: customer[0].total }];
                 let tempIndex = -1; // For coming back to period that it's needed to start checking again.
                 for (let i = 1; i < customer.length; i++) {
                     const currentArrivalTime = moment(customer[i].arrivalTime).valueOf();
