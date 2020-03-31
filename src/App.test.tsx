@@ -159,7 +159,7 @@ describe('FormUtilsService', () => {
     });
 
     describe('CalculateTables', () => {
-      it('should return 10 tables', () => {
+      it('should return 4 tables', () => {
         const data = [
           { firstName: 'Waint', lastName: 'Klinkasen', arrivalTime: '2020-03-30T02:00:00.000Z', departureTime: '2020-03-30T05:00:00.000Z', total: 8, arrivalDate: '', phone: '' },
           { firstName: 'Waint', lastName: 'Klinkasen', arrivalTime: '2020-03-30T03:00:00.000Z', departureTime: '2020-03-30T03:30:00.000Z', total: 2, arrivalDate: '', phone: '' },
