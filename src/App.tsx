@@ -11,18 +11,15 @@ function App() {
       <Navbar bg="dark" variant="dark">
         <Navbar.Brand>Restaurant</Navbar.Brand>
         <Nav className="mr-auto">
-          <Nav.Link href="/">Reservations</Nav.Link>
-          <Nav.Link href="/report">Report</Nav.Link>
+          <Nav.Link href="/reservation">Reservations</Nav.Link>
+          <Nav.Link href="/reservation/report">Report</Nav.Link>
         </Nav>
       </Navbar>
 
       <div className="App">
         <Switch>
-          <Route exact path='/' component={ReservationsScreen} />
-          <Route exact path='/report' component={ReportScreen} />
-          <Route render={function () {
-            return <p>Not found</p>
-          }} />
+          <Route exact path='/reservation' component={ReservationsScreen} />
+          <Route exact path='/reservation/report' component={ReportScreen} />
         </Switch>
       </div>
     </>

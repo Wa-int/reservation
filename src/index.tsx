@@ -9,7 +9,7 @@ import './index.scss';
 import * as serviceWorker from './serviceWorker';
 
 const AppWithRouter = () => (
-  <BrowserRouter basename="/home">
+  <BrowserRouter basename="/form">
     <App />
   </BrowserRouter>
 )

@@ -27,7 +27,7 @@ describe('ReservationsScreen', () => {
     wrapper = loadComponent(createProps());
   });
 
-  it('Phone number validation should be false when phone is 0', () => {
+  it('Expect at least 1 ToastContainer component is called when pressing a submit button', () => {
     const instance = wrapper.instance();
     instance.setState({ firstName: 'Waint', lastName: 'Klinkasen', phone: '023232121', arrivalDate: moment(), arrivalTime: moment(), departureTime: moment().add(30, 'minutes'), total: 10 });
     instance._onSubmit();
