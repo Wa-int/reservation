@@ -68,7 +68,7 @@ export class FormUtils {
 
     public static calculateTables(customer: ReservationForm[], unit: number): number {
 
-        const calTalblesByPeriod = (tempNameList: UniqueCustomerName[], unit: number) => {
+        const calTalblesByPeriod = (tempNameList: UniqueCustomerName[], unit: number): number => {
             return Array.from(new Set(tempNameList.map((e) => e.name))).map((i) => {
                 return Math.ceil(tempNameList.reduce((n, e) => i === e.name ? n + Number(e.total) : n, 0) / unit)
             }).reduce((n, e) => n + Number(e), 0)
