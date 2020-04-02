@@ -8,7 +8,7 @@ import ReservationService from '../../services/apis/Reservations';
 import { DateTimeFormat, FormUtils } from '../../services/FormUtils';
 import { toast, ToastContainer } from 'react-toastify';
 
-interface Props {}
+interface Props { }
 
 interface State {
     firstName: string,

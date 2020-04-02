@@ -71,32 +71,33 @@ export class FormUtils {
         const calTalblesByPeriod = (uniqueNameList: CustomerName[], unit: number): number => {
             return Array.from(new Set(uniqueNameList.map((e) => e.name))).map((i) => {
                 return Math.ceil(uniqueNameList.reduce((n, e) => i === e.name ? n + Number(e.total) : n, 0) / unit)
-            }).reduce((n, e) => n + Number(e), 0)
+            })
+            .reduce((n, e) => n + Number(e), 0)
         };
 
         if (Array.isArray(customer) && customer.length > 0 && unit > 0) {
             customer.sort((a, b) => moment(a.arrivalTime).diff(moment(b.arrivalTime)));
             if (customer.length > 1) {
                 const numberCandidate = [];
-                let departureTime = moment(customer[0].departureTime).valueOf();
+                let departureTime = moment(customer[0].departureTime);
                 let uniqueNameList: CustomerName[] = [{ name: `${customer[0].firstName} ${customer[0].lastName}`, total: customer[0].total }];
                 let tempIndex = -1; // For coming back to period that it's needed to start checking again.
                 for (let i = 1; i < customer.length; i++) {
-                    const currentArrivalTime = moment(customer[i].arrivalTime).valueOf();
-                    const currentDepartureTime = moment(customer[i].departureTime).valueOf();
-                    if (currentDepartureTime <= departureTime) {
+                    const currentArrivalTime = moment(customer[i].arrivalTime);
+                    const currentDepartureTime = moment(customer[i].departureTime);
+                    if (currentDepartureTime.isSameOrBefore(departureTime)) {
                         uniqueNameList.push({ name: `${customer[i].firstName} ${customer[i].lastName}`, total: customer[i].total });
-                    } else if (currentDepartureTime > departureTime && currentArrivalTime < departureTime) {
+                    } else if (currentDepartureTime.isAfter(departureTime) && currentArrivalTime.isBefore(departureTime)) {
                         uniqueNameList.push({ name: `${customer[i].firstName} ${customer[i].lastName}`, total: customer[i].total });
                         tempIndex = tempIndex === -1 ? i : tempIndex;
-                    } else if (currentArrivalTime >= departureTime) {
+                    } else if (currentArrivalTime.isSameOrAfter(departureTime)) {
                         numberCandidate.push(calTalblesByPeriod(uniqueNameList, unit))
                         if (tempIndex !== -1) {
                             i = tempIndex;
                         }
                         tempIndex = -1;
                         uniqueNameList = [];
-                        departureTime = moment(customer[i].departureTime).valueOf();
+                        departureTime = moment(customer[i].departureTime);
                     }
 
                     if (i === customer.length - 1) {
