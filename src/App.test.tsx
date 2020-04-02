@@ -48,7 +48,7 @@ describe('ReservationsScreen', () => {
     const toastSpy = spyOn(toast, 'success');
     const instance = wrapper.instance();
     instance.setState({ firstName: 'Waint', lastName: 'Klinkasen', phone: '023232121', arrivalDate: moment(), arrivalTime: moment(), departureTime: moment().add(30, 'minutes'), total: 10 });
-    ReservationService.saveReservations = jest.fn().mockResolvedValue(new Error('Async error'));
+    ReservationService.saveReservations = jest.fn().mockResolvedValue(true);
 
     await instance._onSubmit();
     await ReservationService.saveReservations
