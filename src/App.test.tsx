@@ -79,6 +79,9 @@ describe('ReservationsScreen', () => {
     const instance = wrapper.instance();
     instance.setState({ firstName: '', lastName: 'Klinkasen', phone: '023232121', arrivalDate: moment(), arrivalTime: moment(), departureTime: moment().add(30, 'minutes'), total: 10 });
     instance._onSubmit();
-    expect(toastSpy).toBeCalledTimes(1);
+    expect(toastSpy).toHaveBeenCalledWith('Please correct your information!', {
+      "position": toast.POSITION.TOP_CENTER,
+      "autoClose": 2000,
+    });
   });
 });
