@@ -49,9 +49,7 @@ describe('ReservationsScreen', () => {
     const instance = wrapper.instance();
     instance.setState({ firstName: 'Waint', lastName: 'Klinkasen', phone: '023232121', arrivalDate: moment(), arrivalTime: moment(), departureTime: moment().add(30, 'minutes'), total: 10 });
     ReservationService.saveReservations = jest.fn().mockResolvedValue(true);
-
     await instance._onSubmit();
-    await ReservationService.saveReservations
     expect(toastSpy).toHaveBeenCalledWith("Your reservations is successful.", {
       "position": toast.POSITION.TOP_CENTER,
       "autoClose": 3000,
@@ -62,13 +60,11 @@ describe('ReservationsScreen', () => {
     const toastSpy = spyOn(toast, 'error');
     const instance = wrapper.instance();
     instance.setState({ firstName: 'Waint', lastName: 'Klinkasen', phone: '023232121', arrivalDate: moment(), arrivalTime: moment(), departureTime: moment().add(30, 'minutes'), total: 10 });
-    ReservationService.saveReservations = jest.fn().mockRejectedValue(new Error('Async error'));
-
-
+    ReservationService.saveReservations = jest.fn().mockRejectedValue(new Error('Error Message'));
     await instance._onSubmit();
     await ReservationService.saveReservations;
     expect(toastSpy).toBeCalledTimes(1);
-    expect(toastSpy).toHaveBeenCalledWith('Async error', {
+    expect(toastSpy).toHaveBeenCalledWith('Error Message', {
       "position": toast.POSITION.TOP_CENTER,
       "autoClose": 3000,
     });

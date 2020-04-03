@@ -60,12 +60,14 @@ class ReservationsScreen extends React.Component<Props, State>  {
         }
 
         ReservationService.saveReservations(formBody)
-            .then(() => {
-                toast.success("Your reservations is successful.", {
-                    position: toast.POSITION.TOP_CENTER,
-                    autoClose: 3000,
-                });
-                this.clearData();
+            .then((isSuccess) => {
+                if (isSuccess) {
+                    toast.success("Your reservations is successful.", {
+                        position: toast.POSITION.TOP_CENTER,
+                        autoClose: 3000,
+                    });
+                    this.clearData();
+                }
             })
             .catch((e: Error) => {
                 toast.error(e.message, {
