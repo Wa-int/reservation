@@ -16,7 +16,7 @@
     "enzyme": "^3.0.0",
     "enzyme-adapter-react-16": "^1.0.2",
     "gh-pages": "^2.2.0",
-    "node-sass": "^4.13.1",
+    "node-sass": "^7.0.0",
     "react": "^16.13.1",
     "react-bootstrap": "^1.0.0",
     "react-dom": "^16.13.1",
